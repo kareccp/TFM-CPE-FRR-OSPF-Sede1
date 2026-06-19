@@ -1,0 +1,4 @@
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+access1-accesschart   1/1     1            1           130m
+cpe1-cpechart         1/1     1            1           130m
+wan1-wanchart         1/1     1            1           130m

@@ -1,0 +1,18 @@
+root@cpe-1:/# 
+root@cpe-1:/# sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 1
+root@cpe-1:/# 
+root@cpe-1:/# 
+root@cpe-1:/# arp -n
+Address                  HWtype  HWaddress           Flags Mask            Iface
+10.0.1.1                 ether   ee:ee:ee:ee:ee:ee   C                     eth0
+10.100.1.254             ether   02:fd:00:04:09:01   C                     net1
+169.254.1.1              ether   ee:ee:ee:ee:ee:ee   C                     eth0
+192.168.255.253          ether   02:fd:00:04:04:03   C                     brint
+root@cpe-1:/# ip neigh
+10.0.1.1 dev eth0 lladdr ee:ee:ee:ee:ee:ee STALE
+10.100.1.254 dev net1 lladdr 02:fd:00:04:09:01 STALE
+169.254.1.1 dev eth0 lladdr ee:ee:ee:ee:ee:ee STALE
+192.168.255.253 dev brint lladdr 02:fd:00:04:04:03 STALE
+root@cpe-1:/# 
+

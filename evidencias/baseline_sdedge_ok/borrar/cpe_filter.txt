@@ -1,0 +1,10 @@
+Chain INPUT (policy ACCEPT 83 packets, 9142 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   41  2904 ACCEPT     all  --  net1   brint   0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+   53  3372 ACCEPT     all  --  brint  net1    0.0.0.0/0            0.0.0.0/0           
+
+Chain OUTPUT (policy ACCEPT 78 packets, 8848 bytes)
+ pkts bytes target     prot opt in     out     source               destination         

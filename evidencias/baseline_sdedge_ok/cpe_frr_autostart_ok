@@ -1,0 +1,68 @@
+root@cpe1-cpechart-6b4446d9f9-t7nzx:/# service frr status
+ * Status of watchfrr: running
+ * Status of zebra: running
+ * Status of staticd: running
+root@cpe1-cpechart-6b4446d9f9-t7nzx:/# vtysh -c "show version"
+FRRouting 7.2.1 (cpe1-cpechart-6b4446d9f9-t7nzx).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+configured with:
+    '--build=x86_64-linux-gnu' '--prefix=/usr' '--includedir=${prefix}/include' '--mandir=${prefix}/share/man' '--infodir=${prefix}/share/info' '--sysconfdir=/etc' '--localstatedir=/var' '--disable-silent-rules' '--libdir=${prefix}/lib/x86_64-linux-gnu' '--libexecdir=${prefix}/lib/x86_64-linux-gnu' '--disable-maintainer-mode' '--enable-exampledir=/usr/share/doc/frr/examples/' '--localstatedir=/var/run/frr' '--sbindir=/usr/lib/frr' '--sysconfdir=/etc/frr' '--with-vtysh-pager=/usr/bin/pager' '--libdir=/usr/lib/x86_64-linux-gnu/frr' '--with-moduledir=/usr/lib/x86_64-linux-gnu/frr/modules' '--disable-dependency-tracking' '--enable-systemd=yes' '--enable-rpki' '--with-libpam' '--enable-doc' '--enable-doc-html' '--enable-snmp' '--enable-fpm' '--disable-protobuf' '--disable-zeromq' '--enable-ospfapi' '--enable-bgp-vnc' '--enable-multipath=256' '--enable-user=frr' '--enable-group=frr' '--enable-vty-group=frrvty' '--enable-configfile-mask=0640' '--enable-logfile-mask=0640' 'build_alias=x86_64-linux-gnu' 'PYTHON=python3'
+root@cpe1-cpechart-6b4446d9f9-t7nzx:/# vtysh -c "show interface brief"
+Interface       Status  VRF             Addresses
+---------       ------  ---             ---------
+axscpe          up      default         
+brint           up      default         192.168.255.254/24
+eth0            up      default         10.1.138.50/32
+lo              up      default         
+net1            up      default         10.100.1.1/24
+net2            up      default         
+ovs-system      down    default         
+
+root@cpe1-cpechart-6b4446d9f9-t7nzx:/# ip route
+default via 10.100.1.254 dev net1 
+10.1.138.49 via 169.254.1.1 dev eth0 
+10.20.1.0/24 via 192.168.255.253 dev brint 
+10.100.1.0/24 dev net1 proto kernel scope link src 10.100.1.1 
+169.254.1.1 dev eth0 scope link 
+192.168.255.0/24 dev brint proto kernel scope link src 192.168.255.254 
+root@cpe1-cpechart-6b4446d9f9-t7nzx:/# iptables -t nat -L -n -v
+Chain PREROUTING (policy ACCEPT 66 packets, 5798 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain INPUT (policy ACCEPT 37 packets, 4034 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 20 packets, 2236 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain POSTROUTING (policy ACCEPT 20 packets, 2236 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   26  1584 MASQUERADE  all  --  *      net1    0.0.0.0/0            0.0.0.0/0           
+root@cpe1-cpechart-6b4446d9f9-t7nzx:/# 
+
+
+
+
+
+
+Desde h1:
+root@h1:~# traceroute 8.8.8.8
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  _gateway (10.20.1.1)  0.096 ms  0.020 ms  0.018 ms
+ 2  192.168.255.254 (192.168.255.254)  2.513 ms  2.458 ms  2.470 ms
+ 3  10.100.1.254 (10.100.1.254)  4.326 ms  3.443 ms  4.272 ms
+ 4  192.168.122.1 (192.168.122.1)  3.252 ms  3.822 ms  3.843 ms
+ 5  10.0.2.2 (10.0.2.2)  3.251 ms  3.533 ms  3.491 ms
+ 6  10.0.2.2 (10.0.2.2)  5.995 ms  4.444 ms  4.241 ms
+root@h1:~# 
+root@h1:~# ping -c 4 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=114 time=7.65 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=114 time=7.16 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=114 time=6.99 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=114 time=11.1 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 6.990/8.214/11.066/1.663 ms
+root@h1:~# 

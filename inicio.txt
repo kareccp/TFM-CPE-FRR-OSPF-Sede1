@@ -1,0 +1,223 @@
+escenario desde cero
+
+crear carpeta compartida shared y dentro rds-final con las carpetas que especifica en la practica final
+
+***Practica4
+copiar carpeta sdedge-ns
+
+cd ~/shared/sdedge-ns/bin
+./prepare-k8slab   # creates namespace and network resources
+
+Cierre la ventana de terminal y vuelva a abrirla o aplique los cambios necesarios mediante:
+source ~/.bashrc
+
+Compruebe que el valor de la variable de entorno SDWNS se ha definido correctamente con:
+echo $SDWNS
+# debe mostrar el valor
+# 'rdsv'
+
+A continuación se va a arrancar el escenario de red que comprende las sedes remotas, los routers isp1 e isp2 y los servidores s1 y voip-gw_. Primero deberá comprobar que se han creado los switches AccessNet1, AccessNet2, ExtNet1, ExtNet2 y MplsWan tecleando en un terminal:
+
+sudo ovs-vsctl show
+
+Para conectar las KNFs con los switches, se ha utilizado Multus, un plugin de tipo container network interface (CNI) para Kubernetes. Compruebe que están creados los correspondientes Network Attachment Definitions de Multus ejecutando el comando:
+
+kubectl get -n $SDWNS network-attachment-definitions
+A continuación arranque el escenario con:
+
+cd ~/shared/sdedge-ns/vnx
+sudo vnx -f sdedge_nfv.xml -t
+
+cd ~/shared/sdedge-ns
+./sdedge1.sh
+
+nota: si da error la primera ejecucion:
+verificar si esta en running:
+kubectl get pods -n rdsv -o wide
+
+kubectl exec -n rdsv deploy/access1-accesschart -- hostname
+kubectl exec -n rdsv deploy/cpe1-cpechart -- hostname
+kubectl exec -n rdsv deploy/wan1-wanchart -- hostname
+
+./sdedge1.sh
+
+comprobar:
+kubectl exec -n rdsv deploy/access1-accesschart -- ovs-vsctl show
+kubectl exec -n rdsv deploy/cpe1-cpechart -- ovs-vsctl show
+kubectl exec -n rdsv deploy/wan1-wanchart -- ovs-vsctl show
+
+comprobar:
+watch kubectl get pods -n rdsv
+
+en h1:
+ping -c 4 10.20.1.1
+ping -c 4 8.8.8.8
+traceroute 8.8.8.8
+
+
+***Practica 5
+
+repositorio de docker
+upm@vnxlab:~$ cd /home/upm/shared/rdsv-final/img
+docker login -u kcp2086  # pedirá password la primera vez
+
+modificar el dockerfile del cpe por FROM kcp2086/vnf-access
+
+cd vnf-access
+docker build -t kcp2086/vnf-access .
+docker push kcp2086/vnf-access
+
+cd ../vnf-wan
+docker build -t kcp2086/vnf-wan .
+docker push kcp2086/vnf-wan
+
+cd ../vnf-cpe
+docker build -t kcp2086/vnf-cpe .
+docker push kcp2086/vnf-cpe
+
+cd ..
+
+Repositorio helm
+Fuera de la carpeta shared, cree una carpeta para almacenar los ficheros del repositorio helm, que va a publicar utilizando un contenedor de docker.
+cd /home/upm
+mkdir $HOME/helm-files
+
+Aplique los siguientes cambios en los ficheros de definición de los helm charts:
+cd ~/shared/rdsv-final/helm
+# cambiar en los ficheros values.yaml de cada helm chart el valor de
+image:
+  repository: educaredes/vnf-img --> kcp2086/vnf-img
+
+Cree en helm-files los paquetes de los helm charts y el índice del repositorio:
+
+# crear en helm-files los paquetes correspondientes a los helm charts
+cd ~/helm-files
+helm package ~/shared/rdsv-final/helm/accesschart
+helm package ~/shared/rdsv-final/helm/cpechart
+helm package ~/shared/rdsv-final/helm/wanchart
+
+# crear el índice del repositorio utilizando para la creación de las URLs
+# la dirección IP localhost de su máquina virtual
+helm repo index --url http://127.0.0.1/ .
+
+# comprobar que se ha creado/actualizado el fichero index.yaml
+cat index.yaml
+
+si es necesario borrar el existente antes de crearlo
+docker rm -f helm-repo
+
+Arranque mediante docker un servidor web nginx, montando helm-files como carpeta para el contenido:
+docker run --restart always --name helm-repo -p 8080:80 -v ~/helm-files:/usr/share/nginx/html:ro -d nginx
+
+Compruebe que puede acceder al repositorio:
+curl http://127.0.0.1:8080/index.yaml
+
+A continuación, modifique el script k8s_sdedge_start.sh para que utilice los helm charts a través del servidor web.
+la línea: helm -n $SDWNS install $vnf$NETNUM $vnf$chart_suffix
+por esta:  helm -n $SDWNS install $vnf$NETNUM http://127.0.0.1:8080/$vnf$chart_suffix
+
+otros ajustes
+export SDWNS=rdsv
+
+verificar que se haya creado bien el dockerfile con la imagen correcta:
+upm@vnxlab:~/shared/rdsv-final$ cat ~/shared/rdsv-final/img/vnf-cpe/Dockerfile
+
+sino hay que modificarlo y volver a actualizar:
+cd ~/shared/rdsv-final/img/vnf-cpe
+docker build -t kcp2086/vnf-cpe .
+docker push kcp2086/vnf-cpe
+
+verificar los values.yaml
+grep -R "repository:" ~/shared/rdsv-final/helm/*/values.yaml
+
+comprobar conectividad desde h1 a internet
+
+-actualizar certificados de kubernetes
+sudo microk8s refresh-certs --cert ca.crt
+-reiniciar
+microk8s stop
+microk8s start
+-comprobar que este listo
+microk8s status --wait-ready
+-probar
+microk8s kubectl get nodes
+
+-levantar escenario
+export SDWNS=rdsv
+./sdedge1.sh
+
+***solucionar error:
+container not found ("accesschart")
+container not found ("cpechart")
+el error se muestra porque el contenedor todavía no ha llegado a crearse.
+
+Haz esto en orden:
+kubectl get pods -n kube-system | grep calico
+kubectl delete pod -n kube-system -l k8s-app=calico-node
+kubectl delete pod -n kube-system -l k8s-app=calico-kube-controllers
+
+Luego espera y comprueba:
+kubectl get pods -n kube-system | grep calico
+
+Cuando Calico vuelva a estar Running, limpia tu namespace:
+helm uninstall access1 -n rdsv
+helm uninstall cpe1 -n rdsv
+helm uninstall wan1 -n rdsv
+
+kubectl delete pod -n rdsv --all --force --grace-period=0
+Y vuelve a lanzar:
+
+export SDWNS=rdsv
+./sdedge1.sh
+
+kubectl get pods -n rdsv
+
+****levantar consolas:
+bin/sdw-knf-consoles open 1
+bin/sdw-knf-consoles open 2
+sudo vnx -f vnx/sdedge_nfv.xml --console
+
+
+***Antes de tocar FRR, guarda este punto. Lo siguiente es documentar el CPE original para copiarlo exactamente.
+Ejecuta:
+kubectl exec -n rdsv deploy/cpe1-cpechart -- ip a
+kubectl exec -n rdsv deploy/cpe1-cpechart -- ip route
+kubectl exec -n rdsv deploy/cpe1-cpechart -- iptables -t nat -L -n -v
+kubectl exec -n rdsv deploy/cpe1-cpechart -- ovs-vsctl show
+kubectl exec -n rdsv deploy/cpe1-cpechart -- sysctl net.ipv4.ip_forward
+
+****Interfaces del CPE original
+Sabemos que existen:
+eth0   → red Kubernetes / control plane
+net1   → salida WAN / Internet (10.100.1.1/24)
+net2   → interfaz multus auxiliar
+brint  → bridge interno (192.168.255.254/24)
+axscpe → interfaz hacia access/OVS
+Eso es importantísimo porque FRR tendrá que reproducir exactamente esa estructura.
+
+Configuración funcional conocida
+Sabemos que el CPE original funciona con:
+Ruta default
+default via 10.100.1.254 dev net1
+Red LAN
+10.20.1.0/24 via 192.168.255.253 dev brint
+NAT
+MASQUERADE out net1
+FORWARD brint → net1
+RELATED,ESTABLISHED net1 → brint
+Forwarding
+net.ipv4.ip_forward = 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+

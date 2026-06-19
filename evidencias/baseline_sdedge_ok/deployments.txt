@@ -1,0 +1,6 @@
+upm@vnxlab:~/shared/rdsv-final$ kubectl get deployments -n rdsv
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+access1-accesschart   1/1     1            1           162m
+cpe1-cpechart         1/1     1            1           162m
+wan1-wanchart         1/1     1            1           162m
+upm@vnxlab:~/shared/rdsv-final$ 

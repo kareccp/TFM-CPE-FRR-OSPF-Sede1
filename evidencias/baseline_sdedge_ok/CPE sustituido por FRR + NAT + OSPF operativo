@@ -1,0 +1,23 @@
+upm@vnxlab:~/shared/rdsv-final$ kubectl exec -n rdsv deploy/cpe1-cpechart -- vtysh -c "show ip ospf neighbor"
+
+Neighbor ID     Pri State           Dead Time Address         Interface            RXmtL RqstL DBsmL
+192.168.255.253   1 Full/DR           35.409s 192.168.255.253 brint:192.168.255.254     0     0     0
+
+upm@vnxlab:~/shared/rdsv-final$ kubectl exec -n rdsv deploy/cpe1-cpechart -- vtysh -c "show ip route 10.20.1.0/24"
+Routing entry for 10.20.1.0/24
+  Known via "ospf", distance 110, metric 20, best
+  Last update 00:12:13 ago
+  * 192.168.255.253, via brint
+
+upm@vnxlab:~/shared/rdsv-final$ kubectl exec -n rdsv deploy/cpe1-cpechart -- vtysh -c "show ip route ospf"
+Codes: K - kernel route, C - connected, S - static, R - RIP,
+       O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+       T - Table, v - VNC, V - VNC-Direct, A - Babel, D - SHARP,
+       F - PBR, f - OpenFabric,
+       > - selected route, * - FIB route, q - queued route, r - rejected route
+
+O>* 10.20.0.0/24 [110/20] via 192.168.255.253, brint, 00:12:15
+O>* 10.20.1.0/24 [110/20] via 192.168.255.253, brint, 00:12:15
+O   10.100.1.0/24 [110/10] is directly connected, net1, 00:13:00
+O   192.168.255.0/24 [110/10] is directly connected, brint, 00:12:20
+upm@vnxlab:~/shared/rdsv-final$ 

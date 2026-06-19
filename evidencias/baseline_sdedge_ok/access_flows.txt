@@ -1,0 +1,6 @@
+root@access-1:/# 
+root@access-1:/# ovs-ofctl dump-flows brint
+ cookie=0x0, duration=9294.536s, table=0, n_packets=229, n_bytes=17822, priority=0 actions=NORMAL
+root@access-1:/# ovs-ofctl dump-flows brwan
+ cookie=0x0, duration=9289.104s, table=0, n_packets=20, n_bytes=1496, priority=0 actions=NORMAL
+root@access-1:/# 

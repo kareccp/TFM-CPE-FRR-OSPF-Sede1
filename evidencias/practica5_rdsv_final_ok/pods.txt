@@ -1,0 +1,4 @@
+NAME                                  READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+access1-accesschart-fc5bcbc66-h2xx9   1/1     Running   0          30m   10.1.138.39   vnxlab   <none>           <none>
+cpe1-cpechart-5986778b98-plg98        1/1     Running   0          30m   10.1.138.45   vnxlab   <none>           <none>
+wan1-wanchart-9778cbc5-5zh9k          1/1     Running   0          30m   10.1.138.48   vnxlab   <none>           <none>

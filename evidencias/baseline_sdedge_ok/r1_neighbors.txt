@@ -1,0 +1,19 @@
+root@r1:~# arp -n
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.255.254          ether   ba:28:87:c9:0e:4d   C                     eth3
+10.20.1.2                ether   02:fd:00:04:00:01   C                     eth1
+root@r1:~# ip neigh
+192.168.255.254 dev eth3 lladdr ba:28:87:c9:0e:4d STALE
+10.20.1.2 dev eth1 lladdr 02:fd:00:04:00:01 STALE
+fe80::f477:d9ff:fef5:bd72 dev eth3 lladdr f6:77:d9:f5:bd:72 STALE
+fe80::fd:ff:fe04:702 dev eth3 lladdr 02:fd:00:04:07:02 STALE
+fe80::fd:ff:fe04:101 dev eth1 lladdr 02:fd:00:04:01:01 STALE
+fe80::fd:ff:fe04:701 dev eth2 lladdr 02:fd:00:04:07:01 STALE
+fe80::c8d4:97ff:fe77:5e22 dev eth3 lladdr ca:d4:97:77:5e:22 STALE
+fe80::1817:35ff:fea6:b068 dev eth2 lladdr 1a:17:35:a6:b0:68 STALE
+fe80::1cf1:fdff:fea3:c9c9 dev eth2 lladdr 1e:f1:fd:a3:c9:c9 STALE
+fe80::f08c:6bff:fe91:535 dev eth2 lladdr f2:8c:6b:91:05:35 STALE
+fe80::b828:87ff:fec9:e4d dev eth3 lladdr ba:28:87:c9:0e:4d STALE
+fe80::fd:ff:fe04:1 dev eth1 lladdr 02:fd:00:04:00:01 STALE
+root@r1:~# 
+

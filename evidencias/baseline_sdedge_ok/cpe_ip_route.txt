@@ -1,0 +1,45 @@
+root@cpe-1:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+3: eth0@if99: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UP group default 
+    link/ether ce:35:33:29:b7:a5 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.1.138.45/32 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::cc35:33ff:fe29:b7a5/64 scope link 
+       valid_lft forever preferred_lft forever
+4: net1@if100: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 56:ce:69:db:c1:e4 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.100.1.1/24 brd 10.100.1.255 scope global net1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::54ce:69ff:fedb:c1e4/64 scope link 
+       valid_lft forever preferred_lft forever
+5: net2@if101: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 56:63:29:a6:65:48 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::5463:29ff:fea6:6548/64 scope link 
+       valid_lft forever preferred_lft forever
+6: ovs-system: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 1a:75:dc:62:44:aa brd ff:ff:ff:ff:ff:ff
+7: brint: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ether ba:28:87:c9:0e:4d brd ff:ff:ff:ff:ff:ff
+    inet 192.168.255.254/24 brd 192.168.255.255 scope global brint
+       valid_lft forever preferred_lft forever
+    inet6 fe80::b828:87ff:fec9:e4d/64 scope link 
+       valid_lft forever preferred_lft forever
+8: axscpe: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue master ovs-system state UNKNOWN group default qlen 1000
+    link/ether ca:d4:97:77:5e:22 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::c8d4:97ff:fe77:5e22/64 scope link 
+       valid_lft forever preferred_lft forever
+root@cpe-1:/# ip route
+default via 10.100.1.254 dev net1 
+10.1.138.39 via 169.254.1.1 dev eth0 
+10.20.1.0/24 via 192.168.255.253 dev brint 
+10.100.1.0/24 dev net1 proto kernel scope link src 10.100.1.1 
+169.254.1.1 dev eth0 scope link 
+192.168.255.0/24 dev brint proto kernel scope link src 192.168.255.254 
+root@cpe-1:/# 
+root@cpe-1:/# 
+root@cpe-1:/# 

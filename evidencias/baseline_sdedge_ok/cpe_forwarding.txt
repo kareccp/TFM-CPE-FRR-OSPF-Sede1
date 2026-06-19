@@ -1,0 +1,5 @@
+root@cpe-1:/# 
+root@cpe-1:/# sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 1
+root@cpe-1:/# 
+root@cpe-1:/# 

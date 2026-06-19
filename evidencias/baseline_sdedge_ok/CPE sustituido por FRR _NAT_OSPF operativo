@@ -1,0 +1,78 @@
+upm@vnxlab:~/shared/rdsv-final$ kubectl exec -n rdsv deploy/cpe1-cpechart -- vtysh -c "show ip ospf neighbor"
+
+Neighbor ID     Pri State           Dead Time Address         Interface            RXmtL RqstL DBsmL
+192.168.255.253   1 Full/DR           35.409s 192.168.255.253 brint:192.168.255.254     0     0     0
+
+upm@vnxlab:~/shared/rdsv-final$ kubectl exec -n rdsv deploy/cpe1-cpechart -- vtysh -c "show ip route 10.20.1.0/24"
+Routing entry for 10.20.1.0/24
+  Known via "ospf", distance 110, metric 20, best
+  Last update 00:12:13 ago
+  * 192.168.255.253, via brint
+
+upm@vnxlab:~/shared/rdsv-final$ kubectl exec -n rdsv deploy/cpe1-cpechart -- vtysh -c "show ip route ospf"
+Codes: K - kernel route, C - connected, S - static, R - RIP,
+       O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+       T - Table, v - VNC, V - VNC-Direct, A - Babel, D - SHARP,
+       F - PBR, f - OpenFabric,
+       > - selected route, * - FIB route, q - queued route, r - rejected route
+
+O>* 10.20.0.0/24 [110/20] via 192.168.255.253, brint, 00:12:15
+O>* 10.20.1.0/24 [110/20] via 192.168.255.253, brint, 00:12:15
+O   10.100.1.0/24 [110/10] is directly connected, net1, 00:13:00
+O   192.168.255.0/24 [110/10] is directly connected, brint, 00:12:20
+upm@vnxlab:~/shared/rdsv-final$ 
+
+
+
+en r1:
+root@r1:~# vtysh -c "show ip ospf neighbor"
+
+Neighbor ID     Pri State           Dead Time Address         Interface                        RXmtL RqstL DBsmL
+
+root@r1:~# vtysh -c "show ip ospf neighbor"
+
+Neighbor ID     Pri State           Dead Time Address         Interface                        RXmtL RqstL DBsmL
+10.1.138.2        1 Full/Backup       35.866s 192.168.255.254 eth3:192.168.255.253                 0     0     0
+
+root@r1:~# vtysh -c "show ip ospf interface eth3"
+eth3 is up
+  ifindex 32, MTU 1500 bytes, BW 10000 Mbit <UP,BROADCAST,RUNNING,MULTICAST>
+  Internet Address 192.168.255.253/24, Broadcast 192.168.255.255, Area 0.0.0.0
+  MTU mismatch detection: disabled
+  Router ID 192.168.255.253, Network Type BROADCAST, Cost: 10
+  Transmit Delay is 1 sec, State DR, Priority 1
+  Designated Router (ID) 192.168.255.253 Interface Address 192.168.255.253/24
+  Backup Designated Router (ID) 10.1.138.2, Interface Address 192.168.255.254
+  Saved Network-LSA sequence number 0x80000003
+  Multicast group memberships: OSPFAllRouters OSPFDesignatedRouters
+  Timer intervals configured, Hello 10s, Dead 40s, Wait 40s, Retransmit 5
+    Hello due in 8.061s
+  Neighbor Count is 1, Adjacent neighbor count is 1
+
+root@r1:~# 
+
+
+
+en h1:
+root@h1:~# traceroute 8.8.8.8
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  _gateway (10.20.1.1)  0.171 ms  0.022 ms  0.019 ms
+ 2  192.168.255.254 (192.168.255.254)  1.474 ms  1.436 ms  1.420 ms
+ 3  10.100.1.254 (10.100.1.254)  1.967 ms  1.970 ms  1.869 ms
+ 4  192.168.122.1 (192.168.122.1)  1.774 ms  1.782 ms  1.824 ms
+ 5  10.0.2.2 (10.0.2.2)  2.151 ms  2.083 ms  2.055 ms
+ 6  10.0.2.2 (10.0.2.2)  7.945 ms  6.386 ms  6.229 ms
+root@h1:~# 
+root@h1:~# ping -c 4 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=114 time=6.22 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=114 time=16.3 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=114 time=7.18 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=114 time=8.23 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3006ms
+rtt min/avg/max/mdev = 6.218/9.470/16.257/3.982 ms
+root@h1:~# 
+
+

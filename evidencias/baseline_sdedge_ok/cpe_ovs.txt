@@ -1,0 +1,12 @@
+root@cpe-1:/# 
+root@cpe-1:/# ovs-vsctl show
+345a8f05-2ba2-486b-a0a9-5c15f230b51e
+    Bridge brint
+        Port axscpe
+            Interface axscpe
+        Port brint
+            Interface brint
+                type: internal
+    ovs_version: "2.13.8"
+root@cpe-1:/# 
+root@cpe-1:/# 

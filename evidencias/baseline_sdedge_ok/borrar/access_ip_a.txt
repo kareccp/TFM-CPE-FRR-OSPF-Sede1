@@ -1,0 +1,44 @@
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+3: eth0@if96: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UP group default 
+    link/ether ee:d3:54:6a:6d:ed brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.1.138.39/32 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::ecd3:54ff:fe6a:6ded/64 scope link 
+       valid_lft forever preferred_lft forever
+4: net1@if97: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 5a:33:99:35:56:e9 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.255.0.1/24 brd 10.255.0.255 scope global net1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5833:99ff:fe35:56e9/64 scope link 
+       valid_lft forever preferred_lft forever
+5: net2@if98: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 2e:0e:b2:e5:e3:3e brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::2c0e:b2ff:fee5:e33e/64 scope link 
+       valid_lft forever preferred_lft forever
+6: ovs-system: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 5a:c5:32:68:24:fb brd ff:ff:ff:ff:ff:ff
+7: brint: <BROADCAST,MULTICAST> mtu 1400 qdisc noop state DOWN group default qlen 1000
+    link/ether 8e:b6:43:ec:cb:43 brd ff:ff:ff:ff:ff:ff
+8: vxlan2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue master ovs-system state UNKNOWN group default qlen 1000
+    link/ether f6:77:d9:f5:bd:72 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::f477:d9ff:fef5:bd72/64 scope link 
+       valid_lft forever preferred_lft forever
+9: axscpe: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue master ovs-system state UNKNOWN group default qlen 1000
+    link/ether 4e:57:2b:ee:1a:c2 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::4c57:2bff:feee:1ac2/64 scope link 
+       valid_lft forever preferred_lft forever
+10: brwan: <BROADCAST,MULTICAST> mtu 1400 qdisc noop state DOWN group default qlen 1000
+    link/ether 76:c2:b4:c7:d6:42 brd ff:ff:ff:ff:ff:ff
+11: vxlan1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue master ovs-system state UNKNOWN group default qlen 1000
+    link/ether 1a:17:35:a6:b0:68 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::1817:35ff:fea6:b068/64 scope link 
+       valid_lft forever preferred_lft forever
+12: axswan: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue master ovs-system state UNKNOWN group default qlen 1000
+    link/ether fa:73:f6:15:a3:46 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::f873:f6ff:fe15:a346/64 scope link 
+       valid_lft forever preferred_lft forever

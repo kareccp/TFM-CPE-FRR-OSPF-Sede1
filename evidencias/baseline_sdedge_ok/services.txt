@@ -1,0 +1,7 @@
+upm@vnxlab:~/shared/rdsv-final$ kubectl get svc -n rdsv
+NAME                  TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+access1-accesschart   NodePort   10.152.183.81    <none>        80:32705/TCP     163m
+cpe1-cpechart         NodePort   10.152.183.77    <none>        80:30817/TCP     163m
+wan1-wanchart         NodePort   10.152.183.223   <none>        8080:30175/TCP   163m
+upm@vnxlab:~/shared/rdsv-final$ 
+

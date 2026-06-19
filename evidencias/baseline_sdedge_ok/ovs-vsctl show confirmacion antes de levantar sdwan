@@ -1,0 +1,40 @@
+pm@vnxlab:~/shared/rdsv-final$ kubectl exec -n rdsv deploy/access1-accesschart -- ovs-vsctl show
+e2029560-59e0-4d33-968e-0e3ca4f70c78
+    Bridge brwan
+        Port vxlan1
+            Interface vxlan1
+        Port axswan
+            Interface axswan
+        Port brwan
+            Interface brwan
+                type: internal
+    Bridge brint
+        Port vxlan2
+            Interface vxlan2
+        Port axscpe
+            Interface axscpe
+        Port brint
+            Interface brint
+                type: internal
+    ovs_version: "2.13.8"
+upm@vnxlab:~/shared/rdsv-final$ kubectl exec -n rdsv deploy/cpe1-cpechart -- ovs-vsctl show
+ba64bfd6-8aad-4f49-84e6-7e723689e114
+    Bridge brint
+        Port brint
+            Interface brint
+                type: internal
+        Port axscpe
+            Interface axscpe
+    ovs_version: "2.13.8"
+upm@vnxlab:~/shared/rdsv-final$ kubectl exec -n rdsv deploy/wan1-wanchart -- ovs-vsctl show
+d8c1296a-6025-4967-bc3d-df69f416a8e0
+    Bridge brwan
+        Port "net1"
+            Interface "net1"
+        Port axswan
+            Interface axswan
+        Port brwan
+            Interface brwan
+                type: internal
+    ovs_version: "2.5.9"
+upm@vnxlab:~/shared/rdsv-final$ 

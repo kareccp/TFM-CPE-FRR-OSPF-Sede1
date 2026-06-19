@@ -1,0 +1,61 @@
+CEE FRR
+
+cpe1-cpechart-6b4446d9f9-sqnjd# 
+cpe1-cpechart-6b4446d9f9-sqnjd# 
+cpe1-cpechart-6b4446d9f9-sqnjd# conf t
+cpe1-cpechart-6b4446d9f9-sqnjd(config)# no ip route 10.20.1.0/24 192.168.255.253
+cpe1-cpechart-6b4446d9f9-sqnjd(config)# end
+cpe1-cpechart-6b4446d9f9-sqnjd# write memory
+Note: this version of vtysh never writes vtysh.conf
+Building Configuration...
+Integrated configuration saved to /etc/frr/frr.conf
+[OK]
+cpe1-cpechart-6b4446d9f9-sqnjd# show ip route 10.20.1.0/24
+Routing entry for 10.20.1.0/24
+  Known via "ospf", distance 110, metric 20
+  Last update 00:14:07 ago
+    192.168.255.253, via brint
+
+Routing entry for 10.20.1.0/24
+  Known via "kernel", distance 0, metric 0, best
+  Last update 00:30:32 ago
+  * 192.168.255.253, via brint
+
+cpe1-cpechart-6b4446d9f9-sqnjd# show ip route ospf
+Codes: K - kernel route, C - connected, S - static, R - RIP,
+       O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+       T - Table, v - VNC, V - VNC-Direct, A - Babel, D - SHARP,
+       F - PBR, f - OpenFabric,
+       > - selected route, * - FIB route, q - queued route, r - rejected route
+
+O>* 10.20.0.0/24 [110/20] via 192.168.255.253, brint, 00:14:10
+O   10.20.1.0/24 [110/20] via 192.168.255.253, brint, 00:14:10
+O   10.100.1.0/24 [110/10] is directly connected, net1, 00:27:15
+O   192.168.255.0/24 [110/10] is directly connected, brint, 00:14:20
+cpe1-cpechart-6b4446d9f9-sqnjd# 
+
+
+
+
+
+H1 ping y traceroute
+
+root@h1:~# traceroute 8.8.8.8
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  _gateway (10.20.1.1)  0.133 ms  0.014 ms  0.011 ms
+ 2  192.168.255.254 (192.168.255.254)  1.042 ms  0.993 ms  0.986 ms
+ 3  10.100.1.254 (10.100.1.254)  1.641 ms  1.658 ms  1.596 ms
+ 4  192.168.122.1 (192.168.122.1)  1.515 ms  1.596 ms  1.520 ms
+ 5  10.0.2.2 (10.0.2.2)  1.561 ms  1.748 ms  1.732 ms
+ 6  10.0.2.2 (10.0.2.2)  6.097 ms  5.075 ms  4.936 ms
+root@h1:~# ping -c 4 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=114 time=6.79 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=114 time=7.65 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=114 time=9.76 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=114 time=8.05 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3007ms
+rtt min/avg/max/mdev = 6.794/8.061/9.755/1.077 ms
+root@h1:~# 

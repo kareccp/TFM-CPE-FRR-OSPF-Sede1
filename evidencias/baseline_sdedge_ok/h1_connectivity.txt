@@ -1,0 +1,19 @@
+root@h1:~# ping -c 4 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=114 time=10.2 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=114 time=8.32 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=114 time=9.91 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=114 time=7.15 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 7.151/8.904/10.237/1.244 ms
+root@h1:~# traceroute 8.8.8.8
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  _gateway (10.20.1.1)  0.170 ms  0.057 ms  0.022 ms
+ 2  192.168.255.254 (192.168.255.254)  0.143 ms  0.032 ms  0.035 ms
+ 3  10.100.1.254 (10.100.1.254)  0.077 ms  0.036 ms  0.034 ms
+ 4  192.168.122.1 (192.168.122.1)  0.175 ms  0.172 ms  0.041 ms
+ 5  10.0.2.2 (10.0.2.2)  0.687 ms  0.644 ms  0.599 ms
+ 6  10.0.2.2 (10.0.2.2)  6.973 ms  3.644 ms  3.908 ms
+root@h1:~# 

@@ -1,0 +1,18 @@
+28461010-8901-41f1-a720-494ab4fb7df3
+    Bridge brwan
+        Port brwan
+            Interface brwan
+                type: internal
+        Port vxlan1
+            Interface vxlan1
+        Port axswan
+            Interface axswan
+    Bridge brint
+        Port vxlan2
+            Interface vxlan2
+        Port brint
+            Interface brint
+                type: internal
+        Port axscpe
+            Interface axscpe
+    ovs_version: "2.13.8"

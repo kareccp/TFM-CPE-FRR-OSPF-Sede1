@@ -1,0 +1,36 @@
+apiVersion: v1
+entries:
+  accesschart:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-06-16T17:09:56.387780864+02:00"
+    description: A Helm chart for Kubernetes
+    digest: afd06db22ccbf650b8352b4ee2425f70011cac039fbd4dc5797b75a24a445178
+    name: accesschart
+    type: application
+    urls:
+    - http://127.0.0.1/accesschart-0.1.0.tgz
+    version: 0.1.0
+  cpechart:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-06-16T17:09:56.388164456+02:00"
+    description: A Helm chart for Kubernetes
+    digest: 5a6a8856d3d23a5140137ff63f1d530d71c486051c36eca92e380f4315b8db17
+    name: cpechart
+    type: application
+    urls:
+    - http://127.0.0.1/cpechart-0.1.0.tgz
+    version: 0.1.0
+  wanchart:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2026-06-16T17:09:56.388420173+02:00"
+    description: A Helm chart for Kubernetes
+    digest: d99d785a486d513463c9d4693d554a6ddbb85cc9fca5d90caad1a0104470f22c
+    name: wanchart
+    type: application
+    urls:
+    - http://127.0.0.1/wanchart-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-06-16T17:09:56.387420046+02:00"

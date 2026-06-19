@@ -1,0 +1,14 @@
+root@wan-1:~# 
+root@wan-1:~# ovs-vsctl show
+db35d3e7-0f34-4c63-a346-82ce33c9227f
+    Bridge brwan
+        Port brwan
+            Interface brwan
+                type: internal
+        Port axswan
+            Interface axswan
+        Port "net1"
+            Interface "net1"
+    ovs_version: "2.5.9"
+root@wan-1:~# 
+root@wan-1:~# 

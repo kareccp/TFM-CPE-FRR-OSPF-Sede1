@@ -1,0 +1,82 @@
+    Image:         kcp2086/vnf-cpe-frr:latest
+    Image ID:      docker.io/kcp2086/vnf-cpe-frr@sha256:2bdfb4c763b1a85ade38048993ce89eba64742ac694b6a84f049e0f03fb626e3
+
+
+    upm@vnxlab:~/shared/rdsv-final$ kubectl get pods -n rdsv -o wide
+NAME                                  READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+access1-accesschart-fc5bcbc66-zbxbc   1/1     Running   0          54s   10.1.138.44   vnxlab   <none>           <none>
+cpe1-cpechart-76df5c7645-fd72n        1/1     Running   0          52s   10.1.138.46   vnxlab   <none>           <none>
+wan1-wanchart-9778cbc5-sswqj          1/1     Running   0          49s   10.1.138.47   vnxlab   <none>           <none>
+upm@vnxlab:~/shared/rdsv-final$ kubectl describe pod -n rdsv cpe1-cpechart-76df5c7645-fd72n | grep Image
+    Image:         kcp2086/vnf-cpe-frr:latest
+    Image ID:      docker.io/kcp2086/vnf-cpe-frr@sha256:2bdfb4c763b1a85ade38048993ce89eba64742ac694b6a84f049e0f03fb626e3
+  Normal  Pulled          3m8s   kubelet            Successfully pulled image "kcp2086/vnf-cpe-frr:latest" in 4.279s (4.279s including waiting). Image size: 192959914 bytes.
+upm@vnxlab:~/shared/rdsv-final$ kubectl exec -n rdsv -it deploy/cpe1-cpechart -- bash
+root@cpe1-cpechart-76df5c7645-fd72n:/# which vtysh
+/usr/bin/vtysh
+root@cpe1-cpechart-76df5c7645-fd72n:/# vtysh -c "show version"
+Exiting: failed to connect to any daemons.
+root@cpe1-cpechart-76df5c7645-fd72n:/# ps aux | grep frr
+root         330  0.0  0.0   3304   660 pts/0    S+   13:57   0:00 grep --color=auto frr
+root@cpe1-cpechart-76df5c7645-fd72n:/# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+3: eth0@if117: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UP group default 
+    link/ether 92:c4:b8:e7:b0:50 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.1.138.46/32 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::90c4:b8ff:fee7:b050/64 scope link 
+       valid_lft forever preferred_lft forever
+4: net1@if118: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether d2:4f:c8:c3:fe:ce brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.100.1.1/24 brd 10.100.1.255 scope global net1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::d04f:c8ff:fec3:fece/64 scope link 
+       valid_lft forever preferred_lft forever
+5: net2@if119: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 52:e1:f7:04:16:30 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::50e1:f7ff:fe04:1630/64 scope link 
+       valid_lft forever preferred_lft forever
+6: ovs-system: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 2e:33:c9:48:28:ff brd ff:ff:ff:ff:ff:ff
+7: brint: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ether 52:c2:fb:3e:a4:40 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.255.254/24 brd 192.168.255.255 scope global brint
+       valid_lft forever preferred_lft forever
+    inet6 fe80::50c2:fbff:fe3e:a440/64 scope link 
+       valid_lft forever preferred_lft forever
+8: axscpe: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc noqueue master ovs-system state UNKNOWN group default qlen 1000
+    link/ether 2a:87:47:a8:46:07 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::2887:47ff:fea8:4607/64 scope link 
+       valid_lft forever preferred_lft forever
+root@cpe1-cpechart-76df5c7645-fd72n:/# ip route
+default via 10.100.1.254 dev net1 
+10.1.138.44 via 169.254.1.1 dev eth0 
+10.20.1.0/24 via 192.168.255.253 dev brint 
+10.100.1.0/24 dev net1 proto kernel scope link src 10.100.1.1 
+169.254.1.1 dev eth0 scope link 
+192.168.255.0/24 dev brint proto kernel scope link src 192.168.255.254 
+root@cpe1-cpechart-76df5c7645-fd72n:/# iptables -t nat -L -n -v
+Chain PREROUTING (policy ACCEPT 65 packets, 5720 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain INPUT (policy ACCEPT 36 packets, 3956 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 17 packets, 1918 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain POSTROUTING (policy ACCEPT 17 packets, 1918 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   26  1584 MASQUERADE  all  --  *      net1    0.0.0.0/0            0.0.0.0/0           
+root@cpe1-cpechart-76df5c7645-fd72n:/# exit
+exit
+upm@vnxlab:~/shared/rdsv-final$ mkdir -p ~/shared/evidencias/cpe_frr_instalado_ok
+upm@vnxlab:~/shared/rdsv-final$ kubectl describe pod -n rdsv cpe1-cpechart-76df5c7645-fd72n | grep Image > ~/shared/evidencias/cpe_frr_instalado_ok/image.txt
+upm@vnxlab:~/shared/rdsv-final$ 
+
+
